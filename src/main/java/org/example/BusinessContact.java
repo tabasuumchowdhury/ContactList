@@ -13,10 +13,24 @@ public class BusinessContact extends Contact implements Serializable {
     //Methods
 
     //Constructors
-    public BusinessContact(String lname, String fname, String email) {
+    public BusinessContact(String lname, String fname, String email) throws InvalidInputException {
         super(lname, fname); //Call to base class All-Args Constructor for
+
+        if (!isValid(email)) {
+            throw new InvalidInputException("Invalid input for an email");
+        }
         this.email = email;
 
+    }
+
+    /**
+     * Checks validity of email
+     * @param email the email of the client, must contain "@" and "."
+     * @return true, if input valid, else false
+     */
+    @Override
+    public boolean isValid(String email) {
+        return email.contains("@") && email.contains(".");
     }
 
     /**

@@ -24,9 +24,11 @@ public class Contact implements Comparable<Object>, Serializable {
      * @param fname is the first name of the contact
      * @param lname is the last name of the contact
      */
-    public Contact(String fname, String lname) {
-        this.fname = fname;
-        this.lname = lname;
+    public Contact(String fname, String lname) throws InvalidInputException{
+        if (isValid(fname) || isValid(lname))
+            throw new InvalidInputException("The name is contains characters other than letters");
+        this.fname = nameFormat(fname);
+        this.lname = nameFormat(lname);
     }
 
     //Getters
@@ -40,10 +42,23 @@ public class Contact implements Comparable<Object>, Serializable {
 
     //Setters
     public void setFname(String fname) {
-        this.fname = fname;
+        this.fname = nameFormat(fname);
+
     }
     public void setLname(String lname) {
-        this.lname = lname;
+        this.lname = nameFormat(lname);
+    }
+
+    public boolean isValid(String names) {
+        names = names.toLowerCase();
+
+        for (int i = 0; i < names.length(); i++) {
+            char ch = names.charAt(i);
+            if ( !( (ch >= 'a' && ch <= 'z'))) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -71,6 +86,11 @@ public class Contact implements Comparable<Object>, Serializable {
         return "Name : " + lname + ", " + fname;
     }
 
+    public String nameFormat(String name) {
+        String cap = name.substring(0,1);
+        String rest = name.substring(1);
+        return (cap.toUpperCase() + rest.toLowerCase());
+    }
     /**
      * Implementation of Comparable
      * Allows the sorting of Contacts

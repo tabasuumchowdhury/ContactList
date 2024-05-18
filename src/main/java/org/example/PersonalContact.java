@@ -13,10 +13,40 @@ public class PersonalContact extends Contact implements Serializable {
 
     //Methods
     //Constructors
-    public PersonalContact(String lname, String fname, String phoneNumber) {
+    public PersonalContact(String lname, String fname, String phoneNumber) throws InvalidInputException {
         super(lname, fname); //Call to base class All-Args Constructor for
-        this.phoneNumber = phoneNumber;
+        if (!isValid(phoneNumber))
+            throw new InvalidInputException("The phone number you entered is invalid");
+        if (phoneNumber.length() != 10)
+            throw new InvalidInputException("The phone number is not 10 digits long");
+        this.phoneNumber = formatNum(phoneNumber);
 
+    }
+
+
+    /**
+     * Formats the phone number for better printing
+     * @param phoneNumber user input
+     * @return formatted phone number
+     */
+    public String formatNum(String phoneNumber) {
+        return ( "(" + phoneNumber.substring(0,3) + ") " + phoneNumber.substring(3,6) +
+                "-" + phoneNumber.substring(6));
+    }
+    /**
+     * Checks validity of phone number
+     * @param phoneNum the phone number of the client, must contain only numbers
+     * @return true, if input valid, else false
+     */
+    @Override
+    public boolean isValid(String phoneNum) {
+        for (int i = 0; i < phoneNum.length(); i++) {
+            char ch = phoneNum.charAt(i);
+            if ( !(ch >= '0' && ch <='9')) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

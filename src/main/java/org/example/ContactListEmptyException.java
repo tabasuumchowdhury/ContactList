@@ -7,7 +7,7 @@ public class ContactListEmptyException extends Exception{
 
     //Class extending Exception only needs Constructors
     public ContactListEmptyException() {
-        super(); //call to the base class (Exception) constructor
+        super("The current Contact List is empty"); //call to the base class (Exception) constructor
     }
 
     public ContactListEmptyException(String message) {

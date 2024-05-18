@@ -5,7 +5,6 @@ package org.example;
 // For “Data Structures and OOP” Section 00001 – Winter 2024
 // --------------------------------------------------------
 
-import javax.crypto.spec.PSource;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -18,15 +17,15 @@ public class ContactListApp {
         double choice = 0.0; //Initiates choice variable to keep computer happy
 
         //Initial Menu
-        System.out.println("****************************************");
-        System.out.println("\t\tContact Management System");
-        System.out.println("****************************************");
+        System.out.println("****************************************************");
+        System.out.println("\t Welcome to your Contact Management System");
+        System.out.println("****************************************************");
 
         //Repeats option Menu until user chooses to exit
         while(true) {
             try { //Tries in case wrong formatting
                 System.out.println("\nChoose an option:");
-                System.out.println("========================================");
+                System.out.println("====================================================");
                 System.out.println("1. Add Contact");
                 System.out.println("\t1.1. Add Personal Contact");
                 System.out.println("\t1.2. Add Business Contact");
@@ -37,9 +36,10 @@ public class ContactListApp {
                 System.out.println("6. Load Contacts");
                 System.out.println("7. Size of Contact List");
                 System.out.println("8. Sort Contact List");
-                System.out.println("9. Exit");
-                System.out.println("========================================");
-                System.out.println("Enter your choice: 1.1, 1.2, 2, 3, 4, 5, 6, 7, 8, 9");
+                System.out.println("9. Clear Current Contact List");
+                System.out.println("10. Exit");
+                System.out.println("====================================================");
+                System.out.println("Enter your choice: 1.1, 1.2, 2, 3, 4, 5, 6, 7, 8, 9, 10");
 
                 choice = keyboard.nextDouble();
                 String temp = keyboard.nextLine(); //Deletes extra line after number
@@ -88,7 +88,11 @@ public class ContactListApp {
                     if (!exitOption())
                         break;
                 } else if (choice == 9) {
+                    //clears current contactList
+                    restartList();
+                } else if (choice == 10) {
                     //Exit
+                    System.out.println("Thanks for using Contact List see you next time");
                     keyboard.close();
                     break;
                 } else {
@@ -110,18 +114,26 @@ public class ContactListApp {
      * Confirms with user that contact was successfully added
      */
     public static void addPersonalContact() {
-        //Asking user for variables
-        System.out.println("Enter the contact's last name you would like to add: ");
-        String lname = keyboard.nextLine();
-        System.out.println("Enter the contact's first name you would like to add: ");
-        String fname = keyboard.nextLine();
-        System.out.println("Enter the personal contact's phone number you would like to add: ");
-        String phoneNumber = keyboard.nextLine();
+        boolean error = false;
+        do {
+            try {
+                //Asking user for variables
+                System.out.println("Enter the contact's last name you would like to add: ");
+                String lname = keyboard.nextLine();
+                System.out.println("Enter the contact's first name you would like to add: ");
+                String fname = keyboard.nextLine();
+                System.out.println("Enter the personal contact's phone number you would like to add: ");
+                String phoneNumber = keyboard.nextLine();
 
-        //Creating new object
-        PersonalContact contact = new PersonalContact(fname, lname, phoneNumber);
-        contactList.addContact(contact);
-        System.out.println("Contact successfully added");
+                //Creating new object
+                PersonalContact contact = new PersonalContact(fname, lname, phoneNumber);
+                error = true;
+                contactList.addContact(contact);
+                System.out.println("Contact successfully added");
+            } catch (InvalidInputException e) {
+                System.out.println(e.getMessage());
+            }
+        } while (!error);
     }
 
     /**
@@ -130,18 +142,26 @@ public class ContactListApp {
      * Confirms with user that contact was successfully added
      */
     public static void addBusinessContact() {
-        //Asking user for variables
-        System.out.println("Enter the contact's last name you would like to add: ");
-        String lname = keyboard.nextLine();
-        System.out.println("Enter the contact's first name you would like to add: ");
-        String fname = keyboard.nextLine();
-        System.out.println("Enter the business contact's email you would like to add: ");
-        String email = keyboard.nextLine();
+        boolean error = false;
+        do {
+            try {
+                //Asking user for variables
+                System.out.println("Enter the contact's last name you would like to add: ");
+                String lname = keyboard.nextLine();
+                System.out.println("Enter the contact's first name you would like to add: ");
+                String fname = keyboard.nextLine();
+                System.out.println("Enter the business contact's email you would like to add: ");
+                String email = keyboard.nextLine();
 
-        //Creating new objects
-        BusinessContact contact = new BusinessContact(fname, lname, email);
-        contactList.addContact(contact);
-        System.out.println("Contact successfully added");
+                //Creating new objects
+                BusinessContact contact = new BusinessContact(fname, lname, email);
+                contactList.addContact(contact);
+                System.out.println("Contact successfully added");
+                error = true;
+            } catch (InvalidInputException e) {
+                System.out.println(e.getMessage());
+            }
+        } while (!error);
     }
 
     /**
@@ -168,7 +188,6 @@ public class ContactListApp {
      * Confirms with user that contact was successfully displayed
      */
     public static void displayContacts() {
-        //add pretty design
         contactList.displayContact();
         System.out.println("Successfully displayed all contacts");
     }
@@ -196,14 +215,14 @@ public class ContactListApp {
         contactList.saveContact(fileName);
         System.out.println("Successfully saved all contacts");
         System.out.println("Would you like to clear all the Contact in the List" +
-                "as they have all been saved?");
+                " as they have all been saved?");
         String answer = keyboard.nextLine();
         answer = answer.toLowerCase();
         if(answer.startsWith("y")) {
             contactList.clear();
-            System.out.println("ContactList is clear and all Contacts have been saved");
+            System.out.println("Current contact List has been cleared and all Contacts have been saved");
         } else {
-            System.out.println("ContactList is not clear, but all Contacts have been saved");
+            System.out.println("Current contactList has not been cleared and all Contacts have been saved");
         }
     }
 
@@ -238,6 +257,10 @@ public class ContactListApp {
         displayContacts();
     }
 
+    /**
+     * Checks if user wants to continue using the program
+     * @return true to continue, false if they want ot end
+     */
     public static boolean exitOption() {
         System.out.println("Would you like to continue?");
         String answer = keyboard.nextLine();
@@ -247,5 +270,14 @@ public class ContactListApp {
         }
         System.out.println("Thanks for using Contact List see you next time");
         return false;
+    }
+
+    /**
+     * Clears the current contact list
+     */
+    public static void restartList() {
+        contactList.clear();
+        System.out.println("Successfully cleared the contactList");
+        displayContacts();
     }
 }
